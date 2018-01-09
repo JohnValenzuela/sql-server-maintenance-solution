@@ -185,6 +185,10 @@ BEGIN
 
   DECLARE @CurrentActionsAllowed TABLE ([Action] nvarchar(max))
 
+  /** JV UPDATE **/  
+  DECLARE @IndexOptimizeRunID INT = (SELECT ISNULL(MAX(IndexOptimizeRunID), 0) + 1 FROM dbo.CommandLog) 
+
+
   DECLARE @Error int
   DECLARE @ReturnCode int
 
@@ -1383,7 +1387,7 @@ BEGIN
             SET @CurrentCommand13 = @CurrentCommand13 + ')'
           END
 
-          EXECUTE @CurrentCommandOutput13 = [dbo].[CommandExecute] @Command = @CurrentCommand13, @CommandType = @CurrentCommandType13, @Mode = 2, @Comment = @CurrentComment, @DatabaseName = @CurrentDatabaseName, @SchemaName = @CurrentSchemaName, @ObjectName = @CurrentObjectName, @ObjectType = @CurrentObjectType, @IndexName = @CurrentIndexName, @IndexType = @CurrentIndexType, @PartitionNumber = @CurrentPartitionNumber, @ExtendedInfo = @CurrentExtendedInfo, @LogToTable = @LogToTable, @Execute = @Execute
+          EXECUTE @CurrentCommandOutput13 = [dbo].[CommandExecute] @Command = @CurrentCommand13, @CommandType = @CurrentCommandType13, @Mode = 2, @Comment = @CurrentComment, @DatabaseName = @CurrentDatabaseName, @SchemaName = @CurrentSchemaName, @ObjectName = @CurrentObjectName, @ObjectType = @CurrentObjectType, @IndexName = @CurrentIndexName, @IndexType = @CurrentIndexType, @PartitionNumber = @CurrentPartitionNumber, @ExtendedInfo = @CurrentExtendedInfo, @LogToTable = @LogToTable, @Execute = @Execute, @IndexOptimizeRunID = @IndexOptimizeRunID
           SET @Error = @@ERROR
           IF @Error <> 0 SET @CurrentCommandOutput13 = @Error
           IF @CurrentCommandOutput13 <> 0 SET @ReturnCode = @CurrentCommandOutput13
@@ -1409,7 +1413,7 @@ BEGIN
           IF (@CurrentStatisticsSample IS NOT NULL OR @CurrentStatisticsResample = 'Y') AND @CurrentNoRecompute = 1 SET @CurrentCommand14 = @CurrentCommand14 + ','
           IF @CurrentNoRecompute = 1 SET @CurrentCommand14 = @CurrentCommand14 + ' NORECOMPUTE'
 
-          EXECUTE @CurrentCommandOutput14 = [dbo].[CommandExecute] @Command = @CurrentCommand14, @CommandType = @CurrentCommandType14, @Mode = 2, @DatabaseName = @CurrentDatabaseName, @SchemaName = @CurrentSchemaName, @ObjectName = @CurrentObjectName, @ObjectType = @CurrentObjectType, @IndexName = @CurrentIndexName, @IndexType = @CurrentIndexType, @StatisticsName = @CurrentStatisticsName, @LogToTable = @LogToTable, @Execute = @Execute
+          EXECUTE @CurrentCommandOutput14 = [dbo].[CommandExecute] @Command = @CurrentCommand14, @CommandType = @CurrentCommandType14, @Mode = 2, @DatabaseName = @CurrentDatabaseName, @SchemaName = @CurrentSchemaName, @ObjectName = @CurrentObjectName, @ObjectType = @CurrentObjectType, @IndexName = @CurrentIndexName, @IndexType = @CurrentIndexType, @StatisticsName = @CurrentStatisticsName, @LogToTable = @LogToTable, @Execute = @Execute, @IndexOptimizeRunID = @IndexOptimizeRunID
           SET @Error = @@ERROR
           IF @Error <> 0 SET @CurrentCommandOutput14 = @Error
           IF @CurrentCommandOutput14 <> 0 SET @ReturnCode = @CurrentCommandOutput14

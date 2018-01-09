@@ -18,7 +18,8 @@ CREATE PROCEDURE [dbo].[CommandExecute]
 @PartitionNumber int = NULL,
 @ExtendedInfo xml = NULL,
 @LogToTable nvarchar(max),
-@Execute nvarchar(max)
+@Execute nvarchar(max),
+@IndexOptimizeRunID INT -- JV Update
 
 AS
 
@@ -125,9 +126,9 @@ BEGIN
   RAISERROR(@StartMessage,10,1) WITH NOWAIT
 
   IF @LogToTable = 'Y'
-  BEGIN
-    INSERT INTO dbo.CommandLog (DatabaseName, SchemaName, ObjectName, ObjectType, IndexName, IndexType, StatisticsName, PartitionNumber, ExtendedInfo, CommandType, Command, StartTime)
-    VALUES (@DatabaseName, @SchemaName, @ObjectName, @ObjectType, @IndexName, @IndexType, @StatisticsName, @PartitionNumber, @ExtendedInfo, @CommandType, @Command, @StartTime)
+  BEGIN  -- UPDATE JV
+    INSERT INTO dbo.CommandLog (DatabaseName, SchemaName, ObjectName, ObjectType, IndexName, IndexType, StatisticsName, PartitionNumber, ExtendedInfo, CommandType, Command, StartTime, IndexOptimizeRunID) 
+    VALUES (@DatabaseName, @SchemaName, @ObjectName, @ObjectType, @IndexName, @IndexType, @StatisticsName, @PartitionNumber, @ExtendedInfo, @CommandType, @Command, @StartTime, @IndexOptimizeRunID)  
   END
 
   SET @ID = SCOPE_IDENTITY()
